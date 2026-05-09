@@ -3,7 +3,7 @@ import { useKV } from '@github/spark/hooks'
 import { Toaster } from 'sonner'
 import { Header } from './components/Header'
 import { Sidebar } from './components/Sidebar'
-import { DashboardView } from './components/views/DashboardView'
+import { DashboardView } from './components/views/DashboardView.improved'
 import { POSView } from './components/views/POSView'
 import { OrdersView } from './components/views/OrdersView'
 import { BranchesView } from './components/views/BranchesView'
@@ -103,6 +103,10 @@ function App() {
     setSettings(updatedSettings)
   }
   
+  const handleCreateDailyClosing = (closing: DailyClosing) => {
+    setDailyClosings((current) => [...(current || []), closing])
+  }
+  
   return (
     <div className="flex h-screen bg-background">
       <Toaster position="top-right" />
@@ -128,7 +132,7 @@ function App() {
               selectedBranchId={selectedBranchId}
             />
           )}
-        
+          
           {activeView === 'pos' && (
             <POSView
               branches={branches || []}
@@ -136,6 +140,7 @@ function App() {
               categories={categories || []}
               settings={settings!}
               onCreateOrder={handleCreateOrder}
+              selectedBranchId={selectedBranchId}
             />
           )}
           
@@ -144,6 +149,7 @@ function App() {
               orders={orders || []}
               branches={branches || []}
               onUpdateOrder={handleUpdateOrder}
+              selectedBranchId={selectedBranchId}
             />
           )}
           
@@ -167,6 +173,10 @@ function App() {
             <SettingsView
               settings={settings!}
               onUpdateSettings={handleUpdateSettings}
+              branches={branches || []}
+              orders={orders || []}
+              onCreateDailyClosing={handleCreateDailyClosing}
+              dailyClosings={dailyClosings || []}
             />
           )}
         </main>

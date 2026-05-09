@@ -1,11 +1,12 @@
-import { Card } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { MetricCard } from '@/components/MetricCard'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { formatCurrency } from '@/lib/helpers'
-import { CurrencyDollar, Receipt, Wallet, TrendUp, Warning } from '@phosphor-icons/react'
-import { Branch, Order, Expense, InventoryItem, MenuItem } from '@/lib/types'
+import { CurrencyDollar, Receipt, Wallet, TrendUp, Warning, Trophy, Fire, Package, ClockCountdown, CheckCircle, XCircle } from '@phosphor-icons/react'
+import { Branch, Order, Expense, InventoryItem, MenuItem, DailyClosing } from '@/lib/types'
+import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 interface DashboardViewProps {
   branches: Branch[]
@@ -13,9 +14,11 @@ interface DashboardViewProps {
   expenses: Expense[]
   inventory: InventoryItem[]
   menuItems: MenuItem[]
+  dailyClosings: DailyClosing[]
+  selectedBranchId: string | null
 }
 
-export function DashboardView({ branches, orders, expenses, inventory, menuItems }: DashboardViewProps) {
+export function DashboardView({ branches, orders, expenses, inventory, menuItems, dailyClosings, selectedBranchId }: DashboardViewProps) {
   const today = new Date().setHours(0, 0, 0, 0)
   
   const todayOrders = orders.filter(o => {
@@ -118,24 +121,24 @@ export function DashboardView({ branches, orders, expenses, inventory, menuItems
           title="Today's Sales"
           value={todaySales}
           prefix="৳"
-          icon={<CurrencyDollar size={48} />}
+          icon={CurrencyDollar}
         />
         <MetricCard
           title="Today's Orders"
           value={todayOrdersCount}
-          icon={<Receipt size={48} />}
+          icon={Receipt}
         />
         <MetricCard
           title="Average Order Value"
           value={averageOrderValue}
           prefix="৳"
-          icon={<TrendUp size={48} />}
+          icon={TrendUp}
         />
         <MetricCard
           title="Estimated Profit"
           value={estimatedProfit}
           prefix="৳"
-          icon={<Wallet size={48} />}
+          icon={Wallet}
         />
       </div>
       
