@@ -110,13 +110,13 @@ export function DashboardView({ branches, orders, expenses, inventory, menuItems
   }).sort((a, b) => b.sales - a.sales)
   
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div>
-        <h2 className="text-3xl font-bold text-foreground mb-1">Dashboard</h2>
-        <p className="text-muted-foreground">Overview of today's restaurant performance</p>
+        <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-1">Dashboard</h2>
+        <p className="text-sm sm:text-base text-muted-foreground">Overview of today's restaurant performance</p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <MetricCard
           title="Today's Sales"
           value={todaySales}
@@ -142,41 +142,41 @@ export function DashboardView({ branches, orders, expenses, inventory, menuItems
         />
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Payment Collection</h3>
-          <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+        <Card className="p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Payment Collection</h3>
+          <div className="space-y-3 sm:space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Cash Collected</span>
-              <span className="text-lg font-semibold">{formatCurrency(totalCashCollected)}</span>
+              <span className="text-xs sm:text-sm text-muted-foreground">Cash Collected</span>
+              <span className="text-base sm:text-lg font-semibold">{formatCurrency(totalCashCollected)}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Digital Payment</span>
-              <span className="text-lg font-semibold">{formatCurrency(totalDigitalCollected)}</span>
+              <span className="text-xs sm:text-sm text-muted-foreground">Digital Payment</span>
+              <span className="text-base sm:text-lg font-semibold">{formatCurrency(totalDigitalCollected)}</span>
             </div>
             <div className="h-px bg-border my-2" />
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">Total Collected</span>
-              <span className="text-xl font-bold text-primary">{formatCurrency(todaySales)}</span>
+              <span className="text-xs sm:text-sm font-medium">Total Collected</span>
+              <span className="text-lg sm:text-xl font-bold text-primary">{formatCurrency(todaySales)}</span>
             </div>
           </div>
         </Card>
         
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Today's Expenses</h3>
-          <div className="space-y-4">
+        <Card className="p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Today's Expenses</h3>
+          <div className="space-y-3 sm:space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Total Expenses</span>
-              <span className="text-lg font-semibold text-destructive">{formatCurrency(todayExpensesTotal)}</span>
+              <span className="text-xs sm:text-sm text-muted-foreground">Total Expenses</span>
+              <span className="text-base sm:text-lg font-semibold text-destructive">{formatCurrency(todayExpensesTotal)}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Revenue Cost</span>
-              <span className="text-lg font-semibold text-warning">{formatCurrency(todayRevenueCost)}</span>
+              <span className="text-xs sm:text-sm text-muted-foreground">Revenue Cost</span>
+              <span className="text-base sm:text-lg font-semibold text-warning">{formatCurrency(todayRevenueCost)}</span>
             </div>
             <div className="h-px bg-border my-2" />
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">Net Profit</span>
-              <span className={`text-xl font-bold ${estimatedProfit >= 0 ? 'text-success' : 'text-destructive'}`}>
+              <span className="text-xs sm:text-sm font-medium">Net Profit</span>
+              <span className={`text-lg sm:text-xl font-bold ${estimatedProfit >= 0 ? 'text-success' : 'text-destructive'}`}>
                 {formatCurrency(estimatedProfit)}
               </span>
             </div>
@@ -194,75 +194,79 @@ export function DashboardView({ branches, orders, expenses, inventory, menuItems
         </Alert>
       )}
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Top Selling Items</h3>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <Card className="p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Top Selling Items</h3>
           {topSellingItems.length > 0 ? (
             <div className="space-y-3">
               {topSellingItems.map((item, index) => (
-                <div key={index} className="flex justify-between items-center">
-                  <div>
-                    <p className="font-medium">{item.name}</p>
-                    <p className="text-sm text-muted-foreground">{item.quantity} sold</p>
+                <div key={index} className="flex justify-between items-center gap-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium truncate text-sm sm:text-base">{item.name}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">{item.quantity} sold</p>
                   </div>
-                  <span className="font-semibold">{formatCurrency(item.revenue)}</span>
+                  <span className="font-semibold text-sm sm:text-base flex-shrink-0">{formatCurrency(item.revenue)}</span>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground text-sm">No sales today</p>
+            <p className="text-muted-foreground text-xs sm:text-sm">No sales today</p>
           )}
         </Card>
         
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Low Stock Alerts</h3>
+        <Card className="p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Low Stock Alerts</h3>
           {lowStockAlerts.length > 0 ? (
             <div className="space-y-3">
               {lowStockAlerts.map((item, index) => (
-                <div key={index} className="flex justify-between items-center">
-                  <div>
-                    <p className="font-medium">{item.itemName}</p>
-                    <p className="text-sm text-muted-foreground">{item.branchName}</p>
+                <div key={index} className="flex justify-between items-center gap-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium truncate text-sm sm:text-base">{item.itemName}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">{item.branchName}</p>
                   </div>
-                  <Badge variant="destructive">
+                  <Badge variant="destructive" className="flex-shrink-0 text-xs">
                     {item.currentStock} {item.unit}
                   </Badge>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground text-sm">All stock levels are good</p>
+            <p className="text-muted-foreground text-xs sm:text-sm">All stock levels are good</p>
           )}
         </Card>
       </div>
       
       {branches.length > 1 && (
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Branch Performance</h3>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Branch</TableHead>
-                <TableHead className="text-right">Sales</TableHead>
-                <TableHead className="text-right">Orders</TableHead>
-                <TableHead className="text-right">Expenses</TableHead>
-                <TableHead className="text-right">Profit</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {branchPerformance.map((branch) => (
-                <TableRow key={branch.branchId}>
-                  <TableCell className="font-medium">{branch.branchName}</TableCell>
-                  <TableCell className="text-right font-semibold">{formatCurrency(branch.sales)}</TableCell>
-                  <TableCell className="text-right">{branch.orders}</TableCell>
-                  <TableCell className="text-right text-destructive">{formatCurrency(branch.expenses)}</TableCell>
-                  <TableCell className={`text-right font-semibold ${branch.profit >= 0 ? 'text-success' : 'text-destructive'}`}>
-                    {formatCurrency(branch.profit)}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        <Card className="p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Branch Performance</h3>
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <div className="inline-block min-w-full align-middle">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="whitespace-nowrap">Branch</TableHead>
+                    <TableHead className="text-right whitespace-nowrap">Sales</TableHead>
+                    <TableHead className="text-right whitespace-nowrap">Orders</TableHead>
+                    <TableHead className="text-right whitespace-nowrap">Expenses</TableHead>
+                    <TableHead className="text-right whitespace-nowrap">Profit</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {branchPerformance.map((branch) => (
+                    <TableRow key={branch.branchId}>
+                      <TableCell className="font-medium whitespace-nowrap">{branch.branchName}</TableCell>
+                      <TableCell className="text-right font-semibold whitespace-nowrap">{formatCurrency(branch.sales)}</TableCell>
+                      <TableCell className="text-right whitespace-nowrap">{branch.orders}</TableCell>
+                      <TableCell className="text-right text-destructive whitespace-nowrap">{formatCurrency(branch.expenses)}</TableCell>
+                      <TableCell className={`text-right font-semibold whitespace-nowrap ${branch.profit >= 0 ? 'text-success' : 'text-destructive'}`}>
+                        {formatCurrency(branch.profit)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
         </Card>
       )}
     </div>

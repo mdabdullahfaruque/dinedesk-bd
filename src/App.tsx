@@ -16,6 +16,7 @@ import { Branch, Order, MenuItem, MenuCategory, Expense, InventoryItem, Settings
 function App() {
   const [activeView, setActiveView] = useState('dashboard')
   const [selectedBranchId, setSelectedBranchId] = useState<string | null>(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   
   const [branches, setBranches] = useKV<Branch[]>('branches', [
     {
@@ -111,11 +112,22 @@ function App() {
     setSettings(updatedSettings)
   }
   
+  const handleNavigate = (view: string) => {
+    setActiveView(view)
+    setMobileMenuOpen(false)
+  }
+
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen bg-background overflow-hidden">
       <Toaster position="top-right" />
       
-      <Sidebar activeView={activeView} onNavigate={setActiveView} settings={settings!} />
+      <Sidebar
+        activeView={activeView}
+        onNavigate={handleNavigate}
+        settings={settings!}
+        mobileMenuOpen={mobileMenuOpen}
+        onMobileMenuClose={() => setMobileMenuOpen(false)}
+      />
       
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header
@@ -123,6 +135,7 @@ function App() {
           selectedBranchId={selectedBranchId}
           onBranchChange={setSelectedBranchId}
           settings={settings!}
+          onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
         />
         
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
