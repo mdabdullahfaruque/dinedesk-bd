@@ -2,7 +2,9 @@ export type UserRole = 'owner' | 'admin' | 'branch-manager' | 'cashier' | 'waite
 
 export type OrderType = 'dine-in' | 'takeaway' | 'delivery'
 
-export type OrderStatus = 'completed' | 'cancelled' | 'refunded'
+export type OrderStatus = 'pending' | 'preparing' | 'ready' | 'served' | 'completed' | 'cancelled' | 'refunded'
+
+export type KitchenStatus = 'new' | 'preparing' | 'ready' | 'served'
 
 export type PaymentMethod = 
   | 'cash' 
@@ -108,6 +110,9 @@ export interface Order {
     name: string
     price: number
     quantity: number
+    kitchenStatus?: KitchenStatus
+    startedAt?: number
+    completedAt?: number
   }>
   subtotal: number
   discount: number
@@ -118,9 +123,14 @@ export interface Order {
   paidAmount: number
   changeAmount: number
   status: OrderStatus
+  kitchenStatus?: KitchenStatus
   cancellationReason?: string
   createdAt: number
   createdBy: string
+  acceptedAt?: number
+  startedPreparingAt?: number
+  readyAt?: number
+  servedAt?: number
 }
 
 export interface Staff {

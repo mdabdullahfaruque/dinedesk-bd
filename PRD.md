@@ -33,6 +33,13 @@ This is a full-featured SaaS dashboard with 10+ interconnected modules including
 - **Progression**: View order list → Apply filters (branch/date/payment/status) → Search by order number → Click order → View full details → Mark as cancelled/refunded (if needed) → Save changes
 - **Success criteria**: Orders load with pagination, filters work correctly, cancelled orders show reason, search returns accurate results
 
+### Kitchen Display System (KDS)
+- **Functionality**: Real-time order tracking interface showing active orders with visual status indicators (new/preparing/ready/served), elapsed time tracking, branch filtering, and quick action buttons for status updates
+- **Purpose**: Enables kitchen staff to efficiently manage order preparation workflow, prioritize orders by time, and communicate order readiness to service staff
+- **Trigger**: Kitchen staff navigates to Kitchen module or receives new order notification
+- **Progression**: View active orders → Filter by status (new/preparing/ready) → Accept new order → Order moves to preparing → Mark ready when complete → Service staff marks as served → Order removes from display
+- **Success criteria**: Orders appear immediately after POS creation, elapsed time updates every second with color warnings, status changes sync in real-time, orders auto-sort by priority and age
+
 ### Branch Management
 - **Functionality**: Add/edit/view branches with details including name, location, phone, manager, operating hours, active status, and performance summary showing sales/orders/expenses/profit
 - **Purpose**: Enables chain owners to manage multiple locations and monitor individual branch performance

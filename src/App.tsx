@@ -10,6 +10,7 @@ import { BranchesView } from './components/views/BranchesView'
 import { InventoryView, ExpensesView, StaffView, ReportsView } from './components/views/AllViews'
 import { MenuView } from './components/views/MenuView'
 import { SettingsView } from './components/views/SettingsView'
+import { KDSView } from './components/views/KDSView'
 import { Branch, Order, MenuItem, MenuCategory, Expense, InventoryItem, Settings, DailyClosing } from './lib/types'
 
 function App() {
@@ -151,6 +152,15 @@ function App() {
             <OrdersView
               orders={orders || []}
               branches={branches || []}
+              onUpdateOrder={handleUpdateOrder}
+            />
+          )}
+          
+          {activeView === 'kitchen' && (
+            <KDSView
+              orders={orders || []}
+              branches={branches || []}
+              settings={settings!}
               onUpdateOrder={handleUpdateOrder}
             />
           )}

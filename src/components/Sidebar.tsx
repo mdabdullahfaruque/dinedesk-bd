@@ -1,4 +1,4 @@
-import { ChartBar, ShoppingCart, Receipt, Buildings, BookOpen, Package, CurrencyDollar, Users, ChartLine, Gear } from '@phosphor-icons/react'
+import { ChartBar, ShoppingCart, Receipt, Buildings, BookOpen, Package, CurrencyDollar, Users, ChartLine, Gear, CookingPot } from '@phosphor-icons/react'
 import { Settings } from '@/lib/types'
 import { useTranslation } from '@/lib/translations'
 
@@ -12,6 +12,7 @@ export const navItems: NavItem[] = [
   { id: 'dashboard', labelKey: 'dashboard', icon: ChartBar },
   { id: 'pos', labelKey: 'pos', icon: ShoppingCart },
   { id: 'orders', labelKey: 'orders', icon: Receipt },
+  { id: 'kitchen', labelKey: 'kitchen', icon: CookingPot },
   { id: 'branches', labelKey: 'branches', icon: Buildings },
   { id: 'menu', labelKey: 'menu', icon: BookOpen },
   { id: 'inventory', labelKey: 'inventory', icon: Package },

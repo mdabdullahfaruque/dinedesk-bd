@@ -132,7 +132,8 @@ export function POSView({ branches, menuItems, categories, settings, onCreateOrd
         menuItemId: item.menuItem.id,
         name: item.menuItem.name,
         price: item.menuItem.price,
-        quantity: item.quantity
+        quantity: item.quantity,
+        kitchenStatus: 'new'
       })),
       subtotal,
       discount: discountAmount,
@@ -142,7 +143,8 @@ export function POSView({ branches, menuItems, categories, settings, onCreateOrd
       paymentMethod,
       paidAmount: total,
       changeAmount: 0,
-      status: 'completed',
+      status: 'pending',
+      kitchenStatus: 'new',
       createdAt: Date.now(),
       createdBy: 'Cashier'
     }
