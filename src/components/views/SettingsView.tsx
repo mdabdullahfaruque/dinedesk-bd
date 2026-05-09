@@ -8,6 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Settings } from '@/lib/types'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import { useTranslation } from '@/lib/translations'
 
 interface SettingsViewProps {
   settings: Settings
@@ -15,6 +16,7 @@ interface SettingsViewProps {
 }
 
 export function SettingsView({ settings, onUpdateSettings }: SettingsViewProps) {
+  const t = useTranslation(settings.language)
   const [vatEnabled, setVatEnabled] = useState(settings.vatEnabled)
   const [serviceChargeEnabled, setServiceChargeEnabled] = useState(settings.serviceChargeEnabled)
   const [applyOnlyForDineIn, setApplyOnlyForDineIn] = useState(settings.applyServiceChargeOnlyForDineIn)
@@ -41,58 +43,62 @@ export function SettingsView({ settings, onUpdateSettings }: SettingsViewProps) 
     }
     
     onUpdateSettings(updated)
-    toast.success('Settings updated successfully')
+    toast.success(t.settingsUpdated)
   }
   
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-8">
       <div>
-        <h2 className="text-3xl font-bold text-foreground mb-1">Settings</h2>
-        <p className="text-muted-foreground">Configure restaurant settings and preferences</p>
+        <h2 className="text-3xl font-bold text-foreground mb-1">{t.settings}</h2>
+        <p className="text-muted-foreground">{t.configureSettings}</p>
       </div>
       
-      <Card className="p-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <Card className="p-6 max-w-4xl">
+        <form onSubmit={handleSubmit} className="space-y-8">
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Restaurant Information</h3>
+            <h3 className="text-lg font-semibold">{t.restaurantInfo}</h3>
             
-            <div>
-              <Label htmlFor="restaurantName">Restaurant Name</Label>
-              <Input
-                id="restaurantName"
-                name="restaurantName"
-                defaultValue={settings.restaurantName}
-                placeholder="Enter restaurant name"
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="businessType">Business Type</Label>
-              <Select name="businessType" defaultValue={settings.businessType}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="single">Single Restaurant</SelectItem>
-                  <SelectItem value="multi-branch">Multi-Branch Chain</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div>
-              <Label htmlFor="currency">Currency</Label>
-              <Input
-                id="currency"
-                name="currency"
-                defaultValue={settings.currency}
-                placeholder="BDT"
-                disabled
-              />
+            <div className="grid gap-4">
+              <div>
+                <Label htmlFor="restaurantName">{t.restaurantName}</Label>
+                <Input
+                  id="restaurantName"
+                  name="restaurantName"
+                  defaultValue={settings.restaurantName}
+                  placeholder={t.enterValue}
+                  className="mt-1"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="businessType">{t.businessType}</Label>
+                <Select name="businessType" defaultValue={settings.businessType}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="single">{t.singleRestaurant}</SelectItem>
+                    <SelectItem value="multi-branch">{t.multiBranchChain}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Label htmlFor="currency">{t.currency}</Label>
+                <Input
+                  id="currency"
+                  name="currency"
+                  defaultValue={settings.currency}
+                  placeholder="BDT"
+                  disabled
+                  className="mt-1"
+                />
+              </div>
             </div>
           </div>
           
           <div className="space-y-4 border-t pt-6">
-            <h3 className="text-lg font-semibold">VAT Settings</h3>
+            <h3 className="text-lg font-semibold">{t.vatSettings}</h3>
             
             <div className="flex items-center space-x-2">
               <Checkbox 
@@ -101,12 +107,12 @@ export function SettingsView({ settings, onUpdateSettings }: SettingsViewProps) 
                 onCheckedChange={(checked) => setVatEnabled(checked as boolean)}
               />
               <Label htmlFor="vatEnabled" className="font-normal cursor-pointer">
-                Enable VAT
+                {t.vatEnabled}
               </Label>
             </div>
             
             <div>
-              <Label htmlFor="defaultVatPercentage">Default VAT Percentage (%)</Label>
+              <Label htmlFor="defaultVatPercentage">{t.vatPercentage} (%)</Label>
               <Input
                 id="defaultVatPercentage"
                 name="defaultVatPercentage"
@@ -115,12 +121,13 @@ export function SettingsView({ settings, onUpdateSettings }: SettingsViewProps) 
                 defaultValue={settings.defaultVatPercentage}
                 placeholder="0"
                 disabled={!vatEnabled}
+                className="mt-1"
               />
             </div>
           </div>
           
           <div className="space-y-4 border-t pt-6">
-            <h3 className="text-lg font-semibold">Service Charge Settings</h3>
+            <h3 className="text-lg font-semibold">{t.serviceChargeSettings}</h3>
             
             <div className="flex items-center space-x-2">
               <Checkbox 
@@ -129,12 +136,12 @@ export function SettingsView({ settings, onUpdateSettings }: SettingsViewProps) 
                 onCheckedChange={(checked) => setServiceChargeEnabled(checked as boolean)}
               />
               <Label htmlFor="serviceChargeEnabled" className="font-normal cursor-pointer">
-                Enable Service Charge
+                {t.serviceChargeEnabled}
               </Label>
             </div>
             
             <div>
-              <Label htmlFor="defaultServiceChargePercentage">Default Service Charge Percentage (%)</Label>
+              <Label htmlFor="defaultServiceChargePercentage">{t.serviceChargePercentage} (%)</Label>
               <Input
                 id="defaultServiceChargePercentage"
                 name="defaultServiceChargePercentage"
@@ -143,6 +150,7 @@ export function SettingsView({ settings, onUpdateSettings }: SettingsViewProps) 
                 defaultValue={settings.defaultServiceChargePercentage}
                 placeholder="0"
                 disabled={!serviceChargeEnabled}
+                className="mt-1"
               />
             </div>
             
@@ -154,82 +162,86 @@ export function SettingsView({ settings, onUpdateSettings }: SettingsViewProps) 
                 disabled={!serviceChargeEnabled}
               />
               <Label htmlFor="applyOnlyForDineIn" className="font-normal cursor-pointer">
-                Apply service charge only for dine-in orders
+                {t.applyOnlyForDineIn}
               </Label>
             </div>
           </div>
           
           <div className="space-y-4 border-t pt-6">
-            <h3 className="text-lg font-semibold">Receipt Settings</h3>
+            <h3 className="text-lg font-semibold">{t.receiptSettings}</h3>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="receiptPhone">Receipt Phone Number</Label>
+                <Label htmlFor="receiptPhone">{t.receiptPhone}</Label>
                 <Input
                   id="receiptPhone"
                   name="receiptPhone"
                   type="tel"
                   defaultValue={settings.receiptPhone}
                   placeholder="+880 1712-345678"
+                  className="mt-1"
                 />
               </div>
               
               <div>
-                <Label htmlFor="receiptBinNumber">BIN/VAT Number</Label>
+                <Label htmlFor="receiptBinNumber">{t.binNumber}</Label>
                 <Input
                   id="receiptBinNumber"
                   name="receiptBinNumber"
                   defaultValue={settings.receiptBinNumber}
                   placeholder="000000000000"
+                  className="mt-1"
                 />
               </div>
             </div>
             
             <div>
-              <Label htmlFor="receiptAddress">Receipt Address</Label>
+              <Label htmlFor="receiptAddress">{t.receiptAddress}</Label>
               <Input
                 id="receiptAddress"
                 name="receiptAddress"
                 defaultValue={settings.receiptAddress}
-                placeholder="Enter address for receipt"
+                placeholder={t.enterValue}
+                className="mt-1"
               />
             </div>
             
             <div>
-              <Label htmlFor="receiptFooter">Receipt Footer Message</Label>
+              <Label htmlFor="receiptFooter">{t.receiptFooter}</Label>
               <Textarea
                 id="receiptFooter"
                 name="receiptFooter"
                 defaultValue={settings.receiptFooter}
-                placeholder="Thank you for dining with us!"
+                placeholder={t.enterValue}
                 rows={3}
+                className="mt-1"
               />
             </div>
           </div>
           
           <div className="space-y-4 border-t pt-6">
-            <h3 className="text-lg font-semibold">Language</h3>
+            <h3 className="text-lg font-semibold">{t.language}</h3>
             
             <div>
-              <Label htmlFor="language">Interface Language</Label>
+              <Label htmlFor="language">{t.interfaceLanguage}</Label>
               <Select name="language" defaultValue={settings.language}>
-                <SelectTrigger>
+                <SelectTrigger className="mt-1">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="en">English</SelectItem>
+                  <SelectItem value="en">{t.english}</SelectItem>
                   <SelectItem value="bn">বাংলা (Bangla)</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-sm text-muted-foreground mt-1">
-                Change the language for labels and buttons
+              <p className="text-sm text-muted-foreground mt-2">
+                {t.changeLanguageDesc}
               </p>
             </div>
           </div>
           
-          <div className="flex justify-end">
+          <div className="flex justify-end pt-4 border-t">
             <Button type="submit" className="bg-accent hover:bg-accent/90">
-              Save Settings
+              {t.saveSettings}
             </Button>
           </div>
         </form>

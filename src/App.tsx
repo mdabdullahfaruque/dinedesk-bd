@@ -7,10 +7,10 @@ import { DashboardView } from './components/views/DashboardView'
 import { POSView } from './components/views/POSView'
 import { OrdersView } from './components/views/OrdersView'
 import { BranchesView } from './components/views/BranchesView'
-import { MenuView, InventoryView, ExpensesView, StaffView, ReportsView } from './components/views/OtherViews'
+import { InventoryView, ExpensesView, StaffView, ReportsView } from './components/views/AllViews'
+import { MenuView } from './components/views/MenuView'
 import { SettingsView } from './components/views/SettingsView'
 import { Branch, Order, MenuItem, MenuCategory, Expense, InventoryItem, Settings, DailyClosing } from './lib/types'
-import { generateId } from './lib/helpers'
 
 function App() {
   const [activeView, setActiveView] = useState('dashboard')
@@ -114,13 +114,14 @@ function App() {
     <div className="flex h-screen bg-background">
       <Toaster position="top-right" />
       
-      <Sidebar activeView={activeView} onNavigate={setActiveView} />
+      <Sidebar activeView={activeView} onNavigate={setActiveView} settings={settings!} />
       
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header
           branches={branches || []}
           selectedBranchId={selectedBranchId}
           onBranchChange={setSelectedBranchId}
+          settings={settings!}
         />
         
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
@@ -164,11 +165,11 @@ function App() {
             />
           )}
           
-          {activeView === 'menu' && <MenuView />}
-          {activeView === 'inventory' && <InventoryView />}
-          {activeView === 'expenses' && <ExpensesView />}
-          {activeView === 'staff' && <StaffView />}
-          {activeView === 'reports' && <ReportsView />}
+          {activeView === 'menu' && <MenuView branches={branches || []} settings={settings!} />}
+          {activeView === 'inventory' && <InventoryView branches={branches || []} settings={settings!} />}
+          {activeView === 'expenses' && <ExpensesView branches={branches || []} settings={settings!} />}
+          {activeView === 'staff' && <StaffView branches={branches || []} settings={settings!} />}
+          {activeView === 'reports' && <ReportsView branches={branches || []} orders={orders || []} expenses={expenses || []} settings={settings!} />}
           
           {activeView === 'settings' && (
             <SettingsView

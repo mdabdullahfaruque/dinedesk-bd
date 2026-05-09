@@ -1,35 +1,40 @@
 import { ChartBar, ShoppingCart, Receipt, Buildings, BookOpen, Package, CurrencyDollar, Users, ChartLine, Gear } from '@phosphor-icons/react'
+import { Settings } from '@/lib/types'
+import { useTranslation } from '@/lib/translations'
 
 export interface NavItem {
   id: string
-  label: string
+  labelKey: string
   icon: React.ElementType
 }
 
 export const navItems: NavItem[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: ChartBar },
-  { id: 'pos', label: 'POS', icon: ShoppingCart },
-  { id: 'orders', label: 'Orders', icon: Receipt },
-  { id: 'branches', label: 'Branches', icon: Buildings },
-  { id: 'menu', label: 'Menu', icon: BookOpen },
-  { id: 'inventory', label: 'Inventory', icon: Package },
-  { id: 'expenses', label: 'Expenses', icon: CurrencyDollar },
-  { id: 'staff', label: 'Staff', icon: Users },
-  { id: 'reports', label: 'Reports', icon: ChartLine },
-  { id: 'settings', label: 'Settings', icon: Gear },
+  { id: 'dashboard', labelKey: 'dashboard', icon: ChartBar },
+  { id: 'pos', labelKey: 'pos', icon: ShoppingCart },
+  { id: 'orders', labelKey: 'orders', icon: Receipt },
+  { id: 'branches', labelKey: 'branches', icon: Buildings },
+  { id: 'menu', labelKey: 'menu', icon: BookOpen },
+  { id: 'inventory', labelKey: 'inventory', icon: Package },
+  { id: 'expenses', labelKey: 'expenses', icon: CurrencyDollar },
+  { id: 'staff', labelKey: 'staff', icon: Users },
+  { id: 'reports', labelKey: 'reports', icon: ChartLine },
+  { id: 'settings', labelKey: 'settings', icon: Gear },
 ]
 
 interface SidebarProps {
   activeView: string
   onNavigate: (view: string) => void
+  settings: Settings
 }
 
-export function Sidebar({ activeView, onNavigate }: SidebarProps) {
+export function Sidebar({ activeView, onNavigate, settings }: SidebarProps) {
+  const t = useTranslation(settings.language)
+  
   return (
     <div className="w-64 bg-card border-r border-border h-screen flex flex-col">
       <div className="p-6 border-b border-border">
         <h1 className="text-2xl font-bold text-primary">DineDesk BD</h1>
-        <p className="text-xs text-muted-foreground mt-1">Restaurant Management</p>
+        <p className="text-xs text-muted-foreground mt-1">{t.restaurantManagement}</p>
       </div>
       
       <nav className="flex-1 p-4">
@@ -49,7 +54,7 @@ export function Sidebar({ activeView, onNavigate }: SidebarProps) {
                   }`}
                 >
                   <Icon size={20} weight={isActive ? 'fill' : 'regular'} />
-                  {item.label}
+                  {t[item.labelKey as keyof typeof t] as string}
                 </button>
               </li>
             )
@@ -59,8 +64,8 @@ export function Sidebar({ activeView, onNavigate }: SidebarProps) {
       
       <div className="p-4 border-t border-border">
         <div className="text-xs text-muted-foreground">
-          <div className="font-medium text-foreground mb-1">Logged in as</div>
-          <div>Restaurant Owner</div>
+          <div className="font-medium text-foreground mb-1">{t.loggedInAs}</div>
+          <div>{t.restaurantOwner}</div>
         </div>
       </div>
     </div>
