@@ -73,10 +73,17 @@ function App() {
     restaurantName: 'DineDesk BD Restaurant',
     businessType: 'multi-branch',
     currency: 'BDT',
+    vatEnabled: true,
     defaultVatPercentage: 5,
+    serviceChargeEnabled: true,
     defaultServiceChargePercentage: 10,
-    enabledPaymentMethods: ['cash', 'bkash', 'nagad', 'rocket', 'card'],
-    receiptFooter: 'Thank you for dining with us! Visit again soon.'
+    applyServiceChargeOnlyForDineIn: true,
+    enabledPaymentMethods: ['cash', 'bkash', 'nagad', 'rocket', 'card', 'bank-transfer', 'foodpanda', 'pathao-food', 'other'],
+    receiptFooter: 'Thank you for dining with us! Visit again soon.',
+    receiptPhone: '+880 1712-345678',
+    receiptAddress: 'Dhanmondi, Dhaka',
+    receiptBinNumber: '000000000000',
+    language: 'en'
   })
   
   const handleCreateOrder = (order: Order) => {

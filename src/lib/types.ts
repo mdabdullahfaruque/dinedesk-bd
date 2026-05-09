@@ -4,16 +4,47 @@ export type OrderType = 'dine-in' | 'takeaway' | 'delivery'
 
 export type OrderStatus = 'completed' | 'cancelled' | 'refunded'
 
-export type PaymentMethod = 'cash' | 'bkash' | 'nagad' | 'rocket' | 'card'
+export type PaymentMethod = 
+  | 'cash' 
+  | 'bkash' 
+  | 'nagad' 
+  | 'rocket' 
+  | 'card' 
+  | 'bank-transfer'
+  | 'foodpanda'
+  | 'pathao-food'
+  | 'other'
+
+export type OrderSource = 
+  | 'walk-in'
+  | 'phone'
+  | 'facebook'
+  | 'foodpanda'
+  | 'pathao-food'
+  | 'website'
+  | 'other'
+
+export type DeliveryStatus = 
+  | 'pending'
+  | 'preparing'
+  | 'out-for-delivery'
+  | 'delivered'
+  | 'cancelled'
 
 export type ExpenseCategory = 
   | 'rent' 
-  | 'salary' 
-  | 'utility' 
+  | 'staff-salary' 
+  | 'gas-bill' 
+  | 'electricity-bill'
+  | 'water-bill'
   | 'raw-materials' 
+  | 'meat-purchase'
+  | 'rice-purchase'
   | 'packaging' 
+  | 'cleaning'
   | 'delivery-cost' 
   | 'maintenance' 
+  | 'marketing'
   | 'other'
 
 export type StockUnit = 'kg' | 'litre' | 'piece' | 'packet'
@@ -55,12 +86,23 @@ export interface CartItem {
   quantity: number
 }
 
+export interface DeliveryInfo {
+  customerName: string
+  phone: string
+  address: string
+  deliveryCharge: number
+  riderName?: string
+  status: DeliveryStatus
+}
+
 export interface Order {
   id: string
   orderNumber: string
   branchId: string
   orderType: OrderType
+  orderSource: OrderSource
   tableNumber?: string
+  deliveryInfo?: DeliveryInfo
   items: Array<{
     menuItemId: string
     name: string
@@ -138,10 +180,17 @@ export interface Settings {
   restaurantName: string
   businessType: 'single' | 'multi-branch'
   currency: string
+  vatEnabled: boolean
   defaultVatPercentage: number
+  serviceChargeEnabled: boolean
   defaultServiceChargePercentage: number
+  applyServiceChargeOnlyForDineIn: boolean
   enabledPaymentMethods: PaymentMethod[]
   receiptFooter: string
+  receiptPhone: string
+  receiptAddress: string
+  receiptBinNumber: string
+  language: 'en' | 'bn'
 }
 
 export interface DashboardMetrics {

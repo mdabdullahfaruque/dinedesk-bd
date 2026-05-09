@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,7 +10,7 @@ import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
 import { formatCurrency, generateOrderNumber, generateId, formatDateTime } from '@/lib/helpers'
 import { Plus, Minus, Trash, X } from '@phosphor-icons/react'
-import { Branch, MenuItem, MenuCategory, CartItem, Order, OrderType, PaymentMethod, Settings } from '@/lib/types'
+import { Branch, MenuItem, MenuCategory, CartItem, Order, OrderType, PaymentMethod, OrderSource, Settings } from '@/lib/types'
 import { toast } from 'sonner'
 
 interface POSViewProps {
@@ -24,6 +24,7 @@ interface POSViewProps {
 export function POSView({ branches, menuItems, categories, settings, onCreateOrder }: POSViewProps) {
   const [selectedBranchId, setSelectedBranchId] = useState<string>(branches[0]?.id || '')
   const [orderType, setOrderType] = useState<OrderType>('dine-in')
+  const [orderSource, setOrderSource] = useState<OrderSource>('walk-in')
   const [tableNumber, setTableNumber] = useState('')
   const [cart, setCart] = useState<CartItem[]>([])
   const [discount, setDiscount] = useState(0)
@@ -32,6 +33,19 @@ export function POSView({ branches, menuItems, categories, settings, onCreateOrd
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash')
   const [showReceipt, setShowReceipt] = useState(false)
   const [lastOrder, setLastOrder] = useState<Order | null>(null)
+  
+  const [customerName, setCustomerName] = useState('')
+  const [customerPhone, setCustomerPhone] = useState('')
+  const [deliveryAddress, setDeliveryAddress] = useState('')
+  const [deliveryCharge, setDeliveryCharge] = useState(0)
+  
+  useEffect(() => {
+    if (settings.applyServiceChargeOnlyForDineIn && orderType !== 'dine-in') {
+      setServiceCharge(0)
+    } else if (settings.serviceChargeEnabled) {
+      setServiceCharge(settings.defaultServiceChargePercentage)
+    }
+  }, [orderType, settings])
   
   const activeBranch = branches.find(b => b.id === selectedBranchId)
   const branchMenuItems = menuItems.filter(item => 
@@ -78,6 +92,10 @@ export function POSView({ branches, menuItems, categories, settings, onCreateOrd
     setCart([])
     setDiscount(0)
     setTableNumber('')
+    setCustomerName('')
+    setCustomerPhone('')
+    setDeliveryAddress('')
+    setDeliveryCharge(0)
   }
   
   const completeOrder = () => {
@@ -91,12 +109,25 @@ export function POSView({ branches, menuItems, categories, settings, onCreateOrd
       return
     }
     
+    if (orderType === 'delivery' && (!customerName || !customerPhone || !deliveryAddress)) {
+      toast.error('Please fill delivery information')
+      return
+    }
+    
     const order: Order = {
       id: generateId(),
       orderNumber: generateOrderNumber(),
       branchId: selectedBranchId,
       orderType,
+      orderSource,
       tableNumber: orderType === 'dine-in' ? tableNumber : undefined,
+      deliveryInfo: orderType === 'delivery' ? {
+        customerName,
+        phone: customerPhone,
+        address: deliveryAddress,
+        deliveryCharge,
+        status: 'pending'
+      } : undefined,
       items: cart.map(item => ({
         menuItemId: item.menuItem.id,
         name: item.menuItem.name,
@@ -160,6 +191,24 @@ export function POSView({ branches, menuItems, categories, settings, onCreateOrd
               </Select>
             </div>
             
+            <div>
+              <Label>Order Source</Label>
+              <Select value={orderSource} onValueChange={(v) => setOrderSource(v as OrderSource)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="walk-in">Walk-in</SelectItem>
+                  <SelectItem value="phone">Phone</SelectItem>
+                  <SelectItem value="facebook">Facebook</SelectItem>
+                  <SelectItem value="foodpanda">Foodpanda</SelectItem>
+                  <SelectItem value="pathao-food">Pathao Food</SelectItem>
+                  <SelectItem value="website">Website</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
             {orderType === 'dine-in' && (
               <div>
                 <Label>Table Number</Label>
@@ -172,6 +221,50 @@ export function POSView({ branches, menuItems, categories, settings, onCreateOrd
               </div>
             )}
           </div>
+          
+          {orderType === 'delivery' && (
+            <Card className="p-4 mt-4">
+              <h3 className="font-semibold mb-3">Delivery Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label>Customer Name</Label>
+                  <Input
+                    type="text"
+                    placeholder="Enter customer name"
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>Phone Number</Label>
+                  <Input
+                    type="tel"
+                    placeholder="01712-345678"
+                    value={customerPhone}
+                    onChange={(e) => setCustomerPhone(e.target.value)}
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <Label>Delivery Address</Label>
+                  <Input
+                    type="text"
+                    placeholder="Enter full delivery address"
+                    value={deliveryAddress}
+                    onChange={(e) => setDeliveryAddress(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>Delivery Charge (BDT)</Label>
+                  <Input
+                    type="number"
+                    placeholder="0"
+                    value={deliveryCharge}
+                    onChange={(e) => setDeliveryCharge(Number(e.target.value) || 0)}
+                  />
+                </div>
+              </div>
+            </Card>
+          )}
         </div>
         
         <Card className="p-6">
@@ -289,11 +382,24 @@ export function POSView({ branches, menuItems, categories, settings, onCreateOrd
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {settings.enabledPaymentMethods.map(method => (
-                  <SelectItem key={method} value={method}>
-                    {method === 'cash' ? 'Cash' : method === 'bkash' ? 'bKash' : method === 'nagad' ? 'Nagad' : method === 'rocket' ? 'Rocket' : 'Card'}
-                  </SelectItem>
-                ))}
+                {settings.enabledPaymentMethods.map(method => {
+                  const labels: Record<string, string> = {
+                    'cash': 'Cash',
+                    'bkash': 'bKash',
+                    'nagad': 'Nagad',
+                    'rocket': 'Rocket',
+                    'card': 'Card',
+                    'bank-transfer': 'Bank Transfer',
+                    'foodpanda': 'Foodpanda',
+                    'pathao-food': 'Pathao Food',
+                    'other': 'Other'
+                  }
+                  return (
+                    <SelectItem key={method} value={method}>
+                      {labels[method] || method}
+                    </SelectItem>
+                  )
+                })}
               </SelectContent>
             </Select>
           </div>
